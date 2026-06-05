@@ -1,0 +1,113 @@
+{
+  "common": {
+    "appName": "Scaleboard",
+    "appTagline": "by Web My Money",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "approve": "Aprobar",
+    "continue": "Continuar",
+    "back": "Atrás",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "loading": "Cargando…",
+    "comingSoon": "Próximamente — ver roadmap"
+  },
+  "sidebar": {
+    "search": "Buscar cliente",
+    "newClient": "+ Nuevo cliente",
+    "groups": {
+      "active": "Activos",
+      "onboarding": "En onboarding",
+      "paused": "Pausados",
+      "archived": "Archivados"
+    },
+    "collapse": "Colapsar barra lateral",
+    "expand": "Expandir barra lateral",
+    "empty": "Aún no hay clientes. Crea el primero."
+  },
+  "topbar": {
+    "modules": {
+      "brief": "Brief",
+      "strategy": "Estrategia",
+      "creative-requests": "Creative Requests",
+      "email-flows": "Email Flows",
+      "attraction-matrix": "Attraction Matrix",
+      "test-lab": "Test Lab",
+      "settings": "Configuración"
+    },
+    "settings": "Configuración general"
+  },
+  "onboarding": {
+    "title": "Onboarding del cliente",
+    "newClient": {
+      "name": "Nombre del cliente",
+      "vertical": "Vertical",
+      "slug": "Slug",
+      "create": "Crear cliente"
+    },
+    "paste": {
+      "title": "Pega el brief del cliente",
+      "placeholder": "Pega aquí el brief completo: oferta, ICP, USP, competidores, KPI, presupuesto…",
+      "submit": "Estructurar con IA",
+      "optional": "Opcional — completar después en Configuración"
+    },
+    "review": {
+      "title": "Revisa los campos extraídos",
+      "subtitle": "Edita lo que sea necesario antes de aprobar.",
+      "rawPaste": "Texto original",
+      "structured": "Campos estructurados",
+      "approve": "Aprobar brief",
+      "rerun": "Volver a ejecutar la IA"
+    },
+    "gated": "Termina el onboarding para habilitar este módulo."
+  },
+  "brief": {
+    "view": "Ver brief",
+    "edit": "Editar brief",
+    "fields": {
+      "offer": "Oferta",
+      "icp": "ICP",
+      "usp": "USP",
+      "competitors": "Competidores",
+      "kpi": "KPI",
+      "budget": "Presupuesto"
+    }
+  },
+  "settings": {
+    "app": {
+      "title": "Configuración",
+      "language": "Idioma de la interfaz",
+      "aiProvider": "Proveedor de IA",
+      "defaultModel": "Modelo por defecto",
+      "dataFolder": "Carpeta de datos"
+    },
+    "client": {
+      "title": "Configuración del cliente",
+      "platforms": "Plataformas",
+      "status": "Estado",
+      "assignments": "Asignaciones",
+      "metaBusinessId": "Meta Business ID",
+      "googleAdsAccountId": "Google Ads Account ID",
+      "ghlLocationId": "GHL Location ID"
+    },
+    "team": {
+      "title": "Equipo",
+      "addMember": "Añadir miembro",
+      "iAm": "Yo soy…",
+      "roles": {
+        "admin": "Administrador",
+        "strategist": "Estratega",
+        "media_buyer": "Media Buyer",
+        "designer": "Diseñador",
+        "viewer": "Visualizador"
+      }
+    }
+  },
+  "firstRun": {
+    "title": "Crea el administrador inicial",
+    "subtitle": "Es la primera vez que arrancas el Story Engine. Crea el usuario administrador para empezar.",
+    "name": "Nombre",
+    "email": "Correo electrónico",
+    "submit": "Crear administrador"
+  }
+}

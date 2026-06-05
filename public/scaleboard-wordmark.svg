@@ -1,0 +1,19 @@
+<svg width="260" height="48" viewBox="0 0 260 48" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Scaleboard by Web My Money">
+  <defs>
+    <linearGradient id="sbWordGrad" x1="0" y1="48" x2="48" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1856FF"/>
+      <stop offset="1" stop-color="#5C8BFF"/>
+    </linearGradient>
+    <style>
+      .sb-name { font: 700 22px "Plus Jakarta Sans", system-ui, sans-serif; fill: #141414; letter-spacing: -0.5px; }
+      .sb-tag  { font: 500 10px "JetBrains Mono", ui-monospace, monospace; fill: #3A344E; letter-spacing: 1.5px; text-transform: uppercase; }
+    </style>
+  </defs>
+  <g>
+    <rect x="6"  y="26" width="8" height="16" rx="4" fill="url(#sbWordGrad)"/>
+    <rect x="20" y="16" width="8" height="26" rx="4" fill="url(#sbWordGrad)"/>
+    <rect x="34" y="6"  width="8" height="36" rx="4" fill="url(#sbWordGrad)"/>
+  </g>
+  <text x="56" y="26" class="sb-name">Scaleboard</text>
+  <text x="56" y="40" class="sb-tag">by Web My Money</text>
+</svg>

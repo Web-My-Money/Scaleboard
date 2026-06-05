@@ -1,0 +1,113 @@
+{
+  "common": {
+    "appName": "Scaleboard",
+    "appTagline": "by Web My Money",
+    "save": "Save",
+    "cancel": "Cancel",
+    "approve": "Approve",
+    "continue": "Continue",
+    "back": "Back",
+    "delete": "Delete",
+    "edit": "Edit",
+    "loading": "Loading…",
+    "comingSoon": "Module coming soon — see roadmap"
+  },
+  "sidebar": {
+    "search": "Search clients",
+    "newClient": "+ New client",
+    "groups": {
+      "active": "Active",
+      "onboarding": "Onboarding",
+      "paused": "Paused",
+      "archived": "Archived"
+    },
+    "collapse": "Collapse sidebar",
+    "expand": "Expand sidebar",
+    "empty": "No clients yet. Create your first one."
+  },
+  "topbar": {
+    "modules": {
+      "brief": "Brief",
+      "strategy": "Strategy",
+      "creative-requests": "Creative Requests",
+      "email-flows": "Email Flows",
+      "attraction-matrix": "Attraction Matrix",
+      "test-lab": "Test Lab",
+      "settings": "Settings"
+    },
+    "settings": "App settings"
+  },
+  "onboarding": {
+    "title": "Client onboarding",
+    "newClient": {
+      "name": "Client name",
+      "vertical": "Vertical",
+      "slug": "Slug",
+      "create": "Create client"
+    },
+    "paste": {
+      "title": "Paste the client brief",
+      "placeholder": "Paste the full brief here: offer, ICP, USP, competitors, KPI, budget…",
+      "submit": "Structure with AI",
+      "optional": "Optional — fill in later from Settings"
+    },
+    "review": {
+      "title": "Review the extracted fields",
+      "subtitle": "Edit anything that needs correcting before approving.",
+      "rawPaste": "Original text",
+      "structured": "Structured fields",
+      "approve": "Approve brief",
+      "rerun": "Re-run AI"
+    },
+    "gated": "Finish onboarding to enable this module."
+  },
+  "brief": {
+    "view": "View brief",
+    "edit": "Edit brief",
+    "fields": {
+      "offer": "Offer",
+      "icp": "ICP",
+      "usp": "USP",
+      "competitors": "Competitors",
+      "kpi": "KPI",
+      "budget": "Budget"
+    }
+  },
+  "settings": {
+    "app": {
+      "title": "Settings",
+      "language": "UI language",
+      "aiProvider": "AI provider",
+      "defaultModel": "Default model",
+      "dataFolder": "Data folder"
+    },
+    "client": {
+      "title": "Client settings",
+      "platforms": "Platforms",
+      "status": "Status",
+      "assignments": "Assignments",
+      "metaBusinessId": "Meta Business ID",
+      "googleAdsAccountId": "Google Ads Account ID",
+      "ghlLocationId": "GHL Location ID"
+    },
+    "team": {
+      "title": "Team",
+      "addMember": "Add member",
+      "iAm": "I am…",
+      "roles": {
+        "admin": "Admin",
+        "strategist": "Strategist",
+        "media_buyer": "Media Buyer",
+        "designer": "Designer",
+        "viewer": "Viewer"
+      }
+    }
+  },
+  "firstRun": {
+    "title": "Create the initial admin",
+    "subtitle": "First time running the Story Engine. Create the admin user to get started.",
+    "name": "Name",
+    "email": "Email",
+    "submit": "Create admin"
+  }
+}
