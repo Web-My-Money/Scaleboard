@@ -9,6 +9,32 @@ import type { ClientSummary, ClientStatus } from "@/lib/schemas";
 
 const GROUP_ORDER: ClientStatus[] = ["active", "onboarding", "paused", "archived"];
 
+function ScaleboardMark({ size = 38 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <linearGradient id="sb-g" x1="0" y1="1" x2="1" y2="0" gradientUnits="objectBoundingBox">
+          <stop offset="0%"   stopColor="#1f2d56"/>
+          <stop offset="100%" stopColor="#8fccb6"/>
+        </linearGradient>
+        <filter id="sb-glow" x="-80%" y="-80%" width="260%" height="260%">
+          <feGaussianBlur stdDeviation="3" result="blur"/>
+          <feMerge>
+            <feMergeNode in="blur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+      {/* Bar 1 — shortest */}
+      <rect x="4"   y="31" width="11" height="13" rx="5.5" fill="url(#sb-g)" opacity="0.5"/>
+      {/* Bar 2 — medium */}
+      <rect x="18.5" y="19" width="11" height="25" rx="5.5" fill="url(#sb-g)" opacity="0.78"/>
+      {/* Bar 3 — tallest, teal glow */}
+      <rect x="33"  y="5"  width="11" height="39" rx="5.5" fill="#8fccb6" filter="url(#sb-glow)"/>
+    </svg>
+  );
+}
+
 const STATUS_DOTS: Record<ClientStatus, string> = {
   active:     "bg-success",
   onboarding: "bg-warning",
@@ -75,13 +101,36 @@ export function Sidebar({ initialClients }: { initialClients: ClientSummary[] })
       } h-screen sticky top-0 flex-shrink-0 flex flex-col transition-all duration-300 overflow-hidden z-20`}
     >
       {/* Logo area */}
-      <div className={`flex items-center gap-3 px-3 py-4 border-b border-white/5 ${collapsed ? "justify-center" : ""}`}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/scaleboard-mark.svg" alt="Scaleboard" width={28} height={28} className="shrink-0" />
+      <div
+        className={`flex items-center border-b py-5 ${
+          collapsed ? "justify-center px-2" : "gap-3 px-4"
+        }`}
+        style={{ borderColor: "rgba(255,255,255,0.06)" }}
+      >
+        <div className="shrink-0 transition-all">
+          <ScaleboardMark size={collapsed ? 28 : 38} />
+        </div>
         {!collapsed && (
           <div>
-            <div className="text-sm font-bold text-white leading-none">Scaleboard</div>
-            <div className="text-[10px] text-secondary/60 font-mono tracking-wide mt-0.5">by Web My Money</div>
+            <div
+              className="font-extrabold leading-tight tracking-tight"
+              style={{ fontSize: "1.125rem", color: "var(--color-text)" }}
+            >
+              Scaleboard
+            </div>
+            <div
+              className="tracking-wide mt-0.5"
+              style={{
+                fontFamily: "var(--font-space-grotesk), sans-serif",
+                fontSize: "0.6rem",
+                fontWeight: 600,
+                letterSpacing: "0.14em",
+                textTransform: "uppercase",
+                color: "rgba(143,204,182,0.55)",
+              }}
+            >
+              by Web My Money
+            </div>
           </div>
         )}
       </div>

@@ -1,11 +1,22 @@
 <svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Scaleboard">
   <defs>
-    <linearGradient id="sbGrad" x1="0" y1="48" x2="48" y2="0" gradientUnits="userSpaceOnUse">
-      <stop offset="0" stop-color="#1856FF"/>
-      <stop offset="1" stop-color="#5C8BFF"/>
+    <linearGradient id="g" x1="0" y1="1" x2="1" y2="0" gradientUnits="objectBoundingBox">
+      <stop offset="0%"   stop-color="#1f2d56"/>
+      <stop offset="100%" stop-color="#8fccb6"/>
     </linearGradient>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="2.5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
   </defs>
-  <rect x="6"  y="26" width="8" height="16" rx="4" fill="url(#sbGrad)"/>
-  <rect x="20" y="16" width="8" height="26" rx="4" fill="url(#sbGrad)"/>
-  <rect x="34" y="6"  width="8" height="36" rx="4" fill="url(#sbGrad)"/>
+
+  <!-- Bar 1 — shortest, left -->
+  <rect x="4"  y="31" width="11" height="13" rx="5.5" fill="url(#g)" opacity="0.55"/>
+  <!-- Bar 2 — medium, center -->
+  <rect x="18.5" y="19" width="11" height="25" rx="5.5" fill="url(#g)" opacity="0.80"/>
+  <!-- Bar 3 — tallest, right — full teal with glow -->
+  <rect x="33" y="5"  width="11" height="39" rx="5.5" fill="#8fccb6" filter="url(#glow)"/>
 </svg>

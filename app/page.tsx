@@ -10,40 +10,37 @@ export default async function HomePage() {
   const paused   = clients.filter((c) => c.status === "paused");
 
   return (
-    <main className="p-6">
+    <main className="p-8">
       {/* Page header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-10">
         <div>
-          <p className="label-caps mb-1">Dashboard</p>
-          <h1 className="text-2xl font-extrabold tracking-tight" style={{ color: "var(--color-text)" }}>
+          <p className="label-caps mb-2">Dashboard</p>
+          <h1 className="text-3xl font-extrabold tracking-tight" style={{ color: "var(--color-text)" }}>
             {t("common.appName")}
-            <span className="text-sm font-normal ml-2" style={{ color: "var(--color-secondary)" }}>
+            <span className="text-base font-normal ml-3" style={{ color: "var(--color-secondary)" }}>
               {t("common.appTagline")}
             </span>
           </h1>
         </div>
-        <Link
-          href="/onboarding"
-          className="btn-primary"
-        >
+        <Link href="/onboarding" className="btn-primary text-base px-6 py-3">
           {t("sidebar.newClient")}
         </Link>
       </div>
 
-      {/* Stats row */}
+      {/* Stats row — full width, equal columns */}
       {clients.length > 0 && (
-        <div className="grid grid-cols-3 gap-3 mb-8 max-w-sm">
-          <div className="stat-card">
-            <div className="stat-value">{active.length}</div>
-            <div className="stat-label">Active</div>
+        <div className="grid grid-cols-3 gap-4 mb-10">
+          <div className="glass-card p-6 flex flex-col gap-2">
+            <div className="stat-value text-3xl">{active.length}</div>
+            <div className="label-caps">Active clients</div>
           </div>
-          <div className="stat-card">
-            <div className="stat-value" style={{ color: "var(--pearl-aqua)" }}>{boarding.length}</div>
-            <div className="stat-label">Onboarding</div>
+          <div className="glass-card p-6 flex flex-col gap-2">
+            <div className="stat-value text-3xl" style={{ color: "var(--pearl-aqua)" }}>{boarding.length}</div>
+            <div className="label-caps">Onboarding</div>
           </div>
-          <div className="stat-card">
-            <div className="stat-value" style={{ color: "var(--color-secondary)" }}>{paused.length}</div>
-            <div className="stat-label">Paused</div>
+          <div className="glass-card p-6 flex flex-col gap-2">
+            <div className="stat-value text-3xl" style={{ color: "var(--color-secondary)" }}>{paused.length}</div>
+            <div className="label-caps">Paused</div>
           </div>
         </div>
       )}

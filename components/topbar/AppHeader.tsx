@@ -23,42 +23,42 @@ export function AppHeader({ currentUser }: { currentUser: Member | null }) {
 
   return (
     <header
-      className="mx-2 mt-2 flex items-center gap-3 px-4"
+      className="mx-2 mt-2 flex items-center gap-4 px-5"
       style={{
         background: "rgba(255,255,255,0.07)",
         backdropFilter: "blur(32px)",
         WebkitBackdropFilter: "blur(32px)",
         border: "1px solid rgba(255,255,255,0.10)",
         borderRadius: "14px",
-        minHeight: "52px",
+        minHeight: "60px",
         boxShadow: "0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.07)",
       }}
     >
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-1.5 text-sm shrink-0">
+      <nav className="flex items-center gap-2 shrink-0">
         {client ? (
           <>
-            <Link href="/" className="text-secondary/60 hover:text-secondary transition-colors text-xs font-medium">
+            <Link href="/" className="hover:text-secondary transition-colors font-medium text-sm" style={{ color: "var(--color-muted)" }}>
               {t("common.appName")}
             </Link>
-            <span className="text-white/15 text-xs">›</span>
+            <span style={{ color: "rgba(255,255,255,0.12)" }}>›</span>
             <Link
               href={`/clients/${client.slug}/brief`}
-              className="font-semibold text-sm hover:text-primary transition-colors"
+              className="font-semibold text-base hover:text-primary transition-colors"
               style={{ color: "var(--color-text)" }}
             >
               {client.name}
             </Link>
           </>
         ) : (
-          <Link href="/" className="font-semibold text-sm" style={{ color: "var(--color-text)" }}>
+          <Link href="/" className="font-semibold text-base" style={{ color: "var(--color-text)" }}>
             {t("common.appName")}
           </Link>
         )}
       </nav>
 
       {/* Separator */}
-      {client && <div className="w-px h-4 bg-white/10 shrink-0" />}
+      {client && <div className="w-px h-5 bg-white/10 shrink-0" />}
 
       {/* Module tabs — scrollable, masked edges */}
       {client && (
@@ -75,7 +75,7 @@ export function AppHeader({ currentUser }: { currentUser: Member | null }) {
         href="/settings"
         title={t("topbar.settings")}
         aria-label={t("topbar.settings")}
-        className="w-8 h-8 grid place-items-center rounded-xl transition-all text-secondary hover:text-text shrink-0"
+        className="w-9 h-9 grid place-items-center rounded-xl transition-all text-secondary hover:text-text shrink-0"
         style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)" }}
       >
         <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
@@ -89,7 +89,7 @@ export function AppHeader({ currentUser }: { currentUser: Member | null }) {
         <Link
           href="/settings"
           title={`${currentUser.name} — ${currentUser.role}`}
-          className="w-8 h-8 rounded-xl grid place-items-center text-[11px] font-bold text-white shrink-0 transition-opacity hover:opacity-80"
+          className="w-9 h-9 rounded-xl grid place-items-center text-[11px] font-bold text-white shrink-0 transition-opacity hover:opacity-80"
           style={{ background: "linear-gradient(135deg, #1f2d56 0%, #8fccb6 100%)", boxShadow: "var(--shadow-glow-sm)" }}
         >
           <ClientInitials name={currentUser.name} />
