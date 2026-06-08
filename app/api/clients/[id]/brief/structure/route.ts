@@ -2,6 +2,7 @@ import { type NextRequest } from "next/server";
 import { z } from "zod";
 import { getClientRepo } from "@/lib/repo";
 import { getAiClient } from "@/lib/ai";
+import { getGuidelinesRepo } from "@/lib/guidelines";
 import { requireApiPermission, jsonError } from "@/lib/api/guards";
 
 const RequestSchema = z.object({
@@ -24,16 +25,35 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     updatedAt: now,
   });
 
+  // Pre-flight AI client construction. If anything is misconfigured (missing
+  // API key, unsupported provider), surface a JSON 5xx synchronously rather
+  // than failing mid-stream — the browser sees "Failed to fetch" otherwise.
+  let ai;
+  try {
+    ai = getAiClient();
+  } catch (err) {
+    return jsonError(
+      err instanceof Error ? err.message : "AI client misconfigured",
+      503,
+    );
+  }
+
+  // Assemble guidelines context (app-level + client-level, general + brief-structurer)
+  const client = await getClientRepo().getClient(id);
+  const { text: guidelinesContext } = await getGuidelinesRepo()
+    .assembleGuidelinesContext(client.slug, "brief-structurer")
+    .catch(() => ({ text: "" }));
+
   const encoder = new TextEncoder();
   const stream = new ReadableStream({
     async start(controller) {
-      const ai = getAiClient();
       const iter = ai.generateStream({
         clientId: id,
         module: "brief-structurer",
         prompt: parsed.data.rawPaste,
         responseFormat: "json",
         temperature: 0.2,
+        guidelinesContext: guidelinesContext || undefined,
       });
       try {
         for await (const chunk of iter) {

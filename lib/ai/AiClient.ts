@@ -12,6 +12,8 @@ export interface GenerateInput {
   maxTokens?: number;
   temperature?: number;
   responseFormat?: "text" | "json";
+  /** Pre-assembled guidelines text (app-level + client-level). Injected before core context. */
+  guidelinesContext?: string;
 }
 
 export interface UsageInfo {

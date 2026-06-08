@@ -114,7 +114,12 @@ export class AnthropicAiClient implements AiClient {
       globalDefault: this.deps.globalDefaultModel ?? DEFAULT_MODEL,
     });
     const system = systemPromptFor(input.module, language);
-    const contextBlock = [core.text, moduleContext].filter(Boolean).join("\n\n");
+    // Injection order: guidelines → core client context → module extras → user prompt
+    const contextBlock = [
+      input.guidelinesContext,
+      core.text,
+      moduleContext,
+    ].filter(Boolean).join("\n\n---\n\n");
     const userContent = contextBlock
       ? `${contextBlock}\n\n---\n\n${input.prompt}`
       : input.prompt;
