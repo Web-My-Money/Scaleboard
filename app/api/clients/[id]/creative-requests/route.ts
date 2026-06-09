@@ -23,6 +23,9 @@ const GenerateSchema = z.object({
   platform: z.string().default("Meta"),
   objective: z.string().default("Leads"),
   funnelStage: z.string().default("Cold"),
+  numStatics:   z.number().int().min(0).max(8).default(3),
+  numVideos:    z.number().int().min(0).max(6).default(2),
+  numCarousels: z.number().int().min(0).max(4).default(0),
   notes: z.string().optional(),
 });
 
@@ -98,8 +101,13 @@ ${selectedHooks.length ? `Top hooks for this angle:\n${selectedHooks.slice(0, 5)
 
 ${input.data.notes ? `Additional notes: ${input.data.notes}` : ""}
 
+QUANTITIES REQUIRED (generate exactly this many — no more, no less):
+- Static angles: ${input.data.numStatics} ${input.data.numStatics === 0 ? "(skip — do not generate any)" : ""}
+- Video angles: ${input.data.numVideos} ${input.data.numVideos === 0 ? "(skip — do not generate any)" : ""}
+- Carousel angles: ${input.data.numCarousels} ${input.data.numCarousels === 0 ? "(skip — do not generate any)" : ""}
+
 Follow the WMM Creative Request SOP from the guidelines exactly.
-Generate at least 3 static angles and 2 video angles with complete copy.`;
+Every requested creative type must be fully populated with complete copy.`;
 
   const encoder = new TextEncoder();
   const stream = new ReadableStream({

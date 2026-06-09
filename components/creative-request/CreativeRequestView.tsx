@@ -18,12 +18,45 @@ const PLATFORMS = ["Meta", "Google", "Meta + Google"];
 const OBJECTIVES = ["Leads", "Sales", "Traffic", "Awareness", "Retargeting"];
 const FUNNEL_STAGES = ["Cold", "Warm", "Hot"];
 
+function Stepper({ label, value, onChange, min = 0, max = 8 }: {
+  label: string; value: number; onChange: (v: number) => void; min?: number; max?: number;
+}) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <span className="label-caps">{label}</span>
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          onClick={() => onChange(Math.max(min, value - 1))}
+          disabled={value <= min}
+          className="w-8 h-8 rounded-lg grid place-items-center text-sm font-bold transition-all disabled:opacity-30"
+          style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.10)" }}
+        >−</button>
+        <span
+          className="w-8 text-center font-semibold text-base tabular-nums"
+          style={{ color: value > 0 ? "var(--pearl-aqua)" : "var(--color-secondary)" }}
+        >{value}</span>
+        <button
+          type="button"
+          onClick={() => onChange(Math.min(max, value + 1))}
+          disabled={value >= max}
+          className="w-8 h-8 rounded-lg grid place-items-center text-sm font-bold transition-all disabled:opacity-30"
+          style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.10)" }}
+        >+</button>
+      </div>
+    </div>
+  );
+}
+
 export function CreativeRequestView({ client, brief, angles, savedList }: Props) {
   const [selectedAngleId, setSelectedAngleId] = useState(angles[0]?.id ?? "");
   const [platform, setPlatform] = useState("Meta");
   const [objective, setObjective] = useState("Leads");
   const [funnelStage, setFunnelStage] = useState("Cold");
   const [notes, setNotes] = useState("");
+  const [numStatics, setNumStatics] = useState(3);
+  const [numVideos, setNumVideos] = useState(2);
+  const [numCarousels, setNumCarousels] = useState(0);
   const [generating, setGenerating] = useState(false);
   const [result, setResult] = useState<AnyObj | null>(null);
   const [savedFilename, setSavedFilename] = useState<string | null>(null);
@@ -39,7 +72,7 @@ export function CreativeRequestView({ client, brief, angles, savedList }: Props)
       const res = await fetch(`/api/clients/${client.id}/creative-requests`, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ angleId: selectedAngleId, platform, objective, funnelStage, notes }),
+        body: JSON.stringify({ angleId: selectedAngleId, platform, objective, funnelStage, notes, numStatics, numVideos, numCarousels }),
       });
       if (!res.ok || !res.body) {
         const body = await res.json().catch(() => null);
@@ -170,6 +203,19 @@ export function CreativeRequestView({ client, brief, angles, savedList }: Props)
             </label>
           </div>
 
+          {/* Quantity controls */}
+          <div>
+            <span className="label-caps mb-3 block">Creatives to generate</span>
+            <div className="grid grid-cols-3 gap-4 glass-card p-4">
+              <Stepper label="Statics" value={numStatics} onChange={setNumStatics} min={0} max={8} />
+              <Stepper label="Videos" value={numVideos} onChange={setNumVideos} min={0} max={6} />
+              <Stepper label="Carousels" value={numCarousels} onChange={setNumCarousels} min={0} max={4} />
+            </div>
+            {numStatics + numVideos + numCarousels === 0 && (
+              <p className="text-xs mt-2" style={{ color: "var(--color-error)" }}>Select at least 1 creative type.</p>
+            )}
+          </div>
+
           <label className="flex flex-col gap-1">
             <span className="label-caps text-secondary">Additional notes (optional)</span>
             <textarea
@@ -185,7 +231,7 @@ export function CreativeRequestView({ client, brief, angles, savedList }: Props)
 
           <button
             onClick={generate}
-            disabled={generating}
+            disabled={generating || numStatics + numVideos + numCarousels === 0}
             className="bg-primary text-white font-semibold rounded-md-token py-2.5 disabled:opacity-50 hover:opacity-90"
           >
             {generating ? (
