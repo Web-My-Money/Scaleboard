@@ -209,16 +209,36 @@ export function CreativeRequestView({ client, brief, angles, savedList }: Props)
           <button onClick={() => setViewMode("form")} className="self-start glass-card px-3 py-2 text-sm hover:bg-glass-elevated">← Back</button>
           {savedList.map((ref) => (
             <div key={ref.filename} className="glass-card px-4 py-3 flex items-center justify-between gap-4">
-              <div>
-                <div className="font-medium text-sm">{ref.filename.replace(/\.json$/, "")}</div>
+              <div className="flex-1 min-w-0">
+                <div className="font-medium text-sm truncate">{ref.filename.replace(/\.json$/, "")}</div>
                 <div className="text-xs text-secondary">{new Date(ref.updatedAt).toLocaleDateString()}</div>
               </div>
-              <button
-                onClick={() => copyBlock(ref.filename, `Saved: ${ref.filename}`)}
-                className="text-xs text-secondary hover:text-text"
-              >
-                {copiedBlock === ref.filename ? "✓" : "Copy name"}
-              </button>
+              <div className="flex gap-2 shrink-0">
+                <button
+                  onClick={async () => {
+                    // Load the saved JSON and display it as a result
+                    const res = await fetch(`/api/clients/${client.id}/guidelines/general`).catch(() => null);
+                    // Actually load via the artifact read endpoint
+                    const dataRes = await fetch(`/api/clients/${client.id}/creative-requests/${encodeURIComponent(ref.filename)}`);
+                    if (dataRes.ok) {
+                      const data = await dataRes.json();
+                      setResult(data);
+                      setSavedFilename(ref.filename.replace(/\.json$/, ""));
+                      setViewMode("result");
+                    }
+                  }}
+                  className="text-xs font-medium hover:opacity-80 transition-opacity"
+                  style={{ color: "var(--pearl-aqua)" }}
+                >
+                  View →
+                </button>
+                <button
+                  onClick={() => copyBlock(ref.filename, ref.filename.replace(/\.json$/, ""))}
+                  className="text-xs text-secondary hover:text-text"
+                >
+                  {copiedBlock === ref.filename ? "✓" : "Copy name"}
+                </button>
+              </div>
             </div>
           ))}
         </div>
@@ -235,6 +255,19 @@ function CreativeRequestResult({ result, filename, onCopyAll, copiedBlock, onCop
   const [activeSection, setActiveSection] = useState<"static" | "video" | "lp" | "naming">("static");
   const ci = result.campaignInfo ?? {};
   const cp = result.conversionPoint ?? {};
+
+  // Normalize: AI may return angles nested under 'deliverables' or at top level
+  const deliverables = result.deliverables ?? result;
+  const staticAngles: AnyObj[] = deliverables.staticAngles ?? result.staticAngles ?? [];
+  const videoAngles: AnyObj[]  = deliverables.videoAngles  ?? result.videoAngles  ?? [];
+
+  // Normalize file naming: 'nomenclature.fileNames' or 'fileNaming.files'
+  const nomenclature = result.nomenclature ?? {};
+  const fileNaming   = result.fileNaming ?? {};
+  const deliveryFolder = nomenclature.deliveryFolder ?? fileNaming.clientCode ?? "";
+  const staticFiles: string[]  = nomenclature.fileNames?.adsStatic ?? [];
+  const videoFiles: string[]   = nomenclature.fileNames?.adsVideo  ?? [];
+  const legacyFiles: AnyObj[]  = fileNaming.files ?? [];
 
   function copyText(label: string, obj: unknown) {
     onCopyBlock(label, typeof obj === "string" ? obj : JSON.stringify(obj, null, 2));
@@ -266,8 +299,8 @@ function CreativeRequestResult({ result, filename, onCopyAll, copiedBlock, onCop
         {(["static", "video", "lp", "naming"] as const).map((s) => (
           <button key={s} onClick={() => setActiveSection(s)}
             className={`px-3 py-1.5 rounded-sm-token text-sm transition ${activeSection === s ? "bg-primary text-white" : "glass-card text-secondary hover:text-text"}`}>
-            {s === "static" ? `Static (${(result.staticAngles ?? []).length})` :
-             s === "video" ? `Video (${(result.videoAngles ?? []).length})` :
+            {s === "static" ? `Static (${staticAngles.length})` :
+             s === "video" ? `Video (${videoAngles.length})` :
              s === "lp" ? "Landing Page" : "File Naming"}
           </button>
         ))}
@@ -276,7 +309,7 @@ function CreativeRequestResult({ result, filename, onCopyAll, copiedBlock, onCop
       {/* Static angles */}
       {activeSection === "static" && (
         <div className="flex flex-col gap-4">
-          {(result.staticAngles ?? []).map((a: AnyObj) => (
+          {staticAngles.map((a: AnyObj) => (
             <div key={a.angleNum} className="glass-card-elevated p-4 flex flex-col gap-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -287,13 +320,20 @@ function CreativeRequestResult({ result, filename, onCopyAll, copiedBlock, onCop
                   {copiedBlock === a.angleNum ? "✓" : "Copy"}
                 </button>
               </div>
+              {/* Avatar / concept */}
+              {(a.avatar ?? a.concept) && (
+                <p className="text-xs" style={{ color: "var(--color-secondary)" }}>{a.avatar ?? a.concept}</p>
+              )}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <CopyField label="Copy IN — Headline" value={a.copyIn?.headline} onCopy={() => copyText(`${a.angleNum}-hin`, a.copyIn?.headline)} copied={copiedBlock === `${a.angleNum}-hin`} />
-                <CopyField label="Copy IN — Subheadline" value={a.copyIn?.subheadline} onCopy={() => copyText(`${a.angleNum}-sub`, a.copyIn?.subheadline)} copied={copiedBlock === `${a.angleNum}-sub`} />
-                <CopyField label="Copy IN — CTA" value={a.copyIn?.ctaText} onCopy={() => copyText(`${a.angleNum}-cta`, a.copyIn?.ctaText)} copied={copiedBlock === `${a.angleNum}-cta`} />
-                <CopyField label="Copy OUT — Primary text" value={a.copyOut?.primaryText} onCopy={() => copyText(`${a.angleNum}-pt`, a.copyOut?.primaryText)} copied={copiedBlock === `${a.angleNum}-pt`} />
-                <CopyField label="Copy OUT — Headline" value={a.copyOut?.headline} onCopy={() => copyText(`${a.angleNum}-oh`, a.copyOut?.headline)} copied={copiedBlock === `${a.angleNum}-oh`} />
-                <CopyField label="Copy OUT — Description" value={a.copyOut?.description} onCopy={() => copyText(`${a.angleNum}-od`, a.copyOut?.description)} copied={copiedBlock === `${a.angleNum}-od`} />
+                {/* Hook (new format) or Copy IN headline (old format) */}
+                <CopyField label="Hook / Headline" value={a.hook ?? a.copyIn?.headline} onCopy={() => copyText(`${a.angleNum}-hook`, a.hook ?? a.copyIn?.headline)} copied={copiedBlock === `${a.angleNum}-hook`} />
+                {/* Supporting copy or primary text */}
+                <CopyField label="Supporting Copy / Primary text" value={a.supportingCopy ?? a.copyOut?.primaryText} onCopy={() => copyText(`${a.angleNum}-body`, a.supportingCopy ?? a.copyOut?.primaryText)} copied={copiedBlock === `${a.angleNum}-body`} />
+                {/* CTA */}
+                <CopyField label="CTA" value={a.cta ?? a.copyIn?.ctaText} onCopy={() => copyText(`${a.angleNum}-cta`, a.cta ?? a.copyIn?.ctaText)} copied={copiedBlock === `${a.angleNum}-cta`} />
+                {/* Copy OUT fields (if present) */}
+                {a.copyOut?.headline && <CopyField label="Copy OUT — Headline" value={a.copyOut.headline} onCopy={() => copyText(`${a.angleNum}-oh`, a.copyOut.headline)} copied={copiedBlock === `${a.angleNum}-oh`} />}
+                {a.copyOut?.description && <CopyField label="Copy OUT — Description" value={a.copyOut.description} onCopy={() => copyText(`${a.angleNum}-od`, a.copyOut.description)} copied={copiedBlock === `${a.angleNum}-od`} />}
               </div>
             </div>
           ))}
@@ -303,7 +343,7 @@ function CreativeRequestResult({ result, filename, onCopyAll, copiedBlock, onCop
       {/* Video angles */}
       {activeSection === "video" && (
         <div className="flex flex-col gap-4">
-          {(result.videoAngles ?? []).map((a: AnyObj) => (
+          {videoAngles.map((a: AnyObj) => (
             <div key={a.angleNum} className="glass-card-elevated p-4 flex flex-col gap-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -355,20 +395,62 @@ function CreativeRequestResult({ result, filename, onCopyAll, copiedBlock, onCop
       )}
 
       {/* File naming */}
-      {activeSection === "naming" && result.fileNaming && (
+      {activeSection === "naming" && (
         <div className="glass-card-elevated p-4 flex flex-col gap-3">
-          <div className="font-semibold">File Naming — {result.fileNaming.clientCode} · {result.fileNaming.campShort}</div>
-          <div className="flex flex-col gap-2">
-            {(result.fileNaming.files ?? []).map((f: AnyObj, i: number) => (
-              <div key={i} className="glass-card px-4 py-3 flex items-center justify-between gap-4">
-                <span className="label-caps text-secondary w-16">{f.type}</span>
-                <code className="font-mono text-sm flex-1">{f.name}</code>
-                <button onClick={() => copyText(`fn-${i}`, f.name)} className="text-xs text-secondary hover:text-text">
-                  {copiedBlock === `fn-${i}` ? "✓" : "Copy"}
-                </button>
+          {deliveryFolder && (
+            <div className="flex items-center gap-2">
+              <span className="label-caps text-secondary">Delivery folder</span>
+              <code className="font-mono text-sm" style={{ color: "var(--pearl-aqua)" }}>{deliveryFolder}</code>
+              <button onClick={() => copyText("folder", deliveryFolder)} className="text-xs text-secondary hover:text-text ml-1">
+                {copiedBlock === "folder" ? "✓" : "Copy"}
+              </button>
+            </div>
+          )}
+          {/* New format: flat lists of filenames */}
+          {staticFiles.length > 0 && (
+            <div>
+              <div className="label-caps mb-2">Static files</div>
+              <div className="flex flex-col gap-1.5">
+                {staticFiles.map((name: string, i: number) => (
+                  <div key={i} className="glass-card px-3 py-2 flex items-center justify-between gap-4">
+                    <code className="font-mono text-sm flex-1">{name}</code>
+                    <button onClick={() => copyText(`sn-${i}`, name)} className="text-xs text-secondary hover:text-text shrink-0">
+                      {copiedBlock === `sn-${i}` ? "✓" : "Copy"}
+                    </button>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          )}
+          {videoFiles.length > 0 && (
+            <div>
+              <div className="label-caps mb-2">Video files</div>
+              <div className="flex flex-col gap-1.5">
+                {videoFiles.map((name: string, i: number) => (
+                  <div key={i} className="glass-card px-3 py-2 flex items-center justify-between gap-4">
+                    <code className="font-mono text-sm flex-1">{name}</code>
+                    <button onClick={() => copyText(`vn-${i}`, name)} className="text-xs text-secondary hover:text-text shrink-0">
+                      {copiedBlock === `vn-${i}` ? "✓" : "Copy"}
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {/* Legacy format fallback */}
+          {legacyFiles.length > 0 && (
+            <div className="flex flex-col gap-1.5">
+              {legacyFiles.map((f: AnyObj, i: number) => (
+                <div key={i} className="glass-card px-3 py-2 flex items-center justify-between gap-4">
+                  <span className="label-caps text-secondary w-16">{f.type}</span>
+                  <code className="font-mono text-sm flex-1">{f.name}</code>
+                  <button onClick={() => copyText(`fn-${i}`, f.name)} className="text-xs text-secondary hover:text-text">
+                    {copiedBlock === `fn-${i}` ? "✓" : "Copy"}
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>
