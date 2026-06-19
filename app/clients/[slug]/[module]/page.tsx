@@ -1,12 +1,8 @@
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 
-// Modules with real pages have their own folder — only list remaining placeholders here
-const PLACEHOLDER_MODULES = new Set([
-  "email-flows",
-  "attraction-matrix",
-  "test-lab",
-]);
+// All main modules now have real pages — this catch-all handles unknown routes only
+const PLACEHOLDER_MODULES = new Set<string>([]); // empty: notFound() for all
 
 export default async function ModulePlaceholder({
   params,

@@ -12,9 +12,10 @@ const MODULES = [
   { key: "email-flows",       label: "Emails" },
   { key: "attraction-matrix", label: "Attraction" },
   { key: "test-lab",          label: "Test Lab" },
+  { key: "settings",          label: "⚙ Config" },
 ] as const;
 
-type ModuleKey = (typeof MODULES)[number]["key"] | "settings";
+type ModuleKey = (typeof MODULES)[number]["key"];
 
 export function ClientModuleTabs({ slug, clientStatus }: { slug: string; clientStatus: string }) {
   const t = useTranslations();
